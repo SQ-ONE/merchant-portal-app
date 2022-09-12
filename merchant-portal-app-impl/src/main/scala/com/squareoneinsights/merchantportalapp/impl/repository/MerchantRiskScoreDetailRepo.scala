@@ -15,12 +15,13 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class MerchantRiskScoreDetailRepo(val config: DatabaseConfig[JdbcProfile])
-                                           (implicit ec: ExecutionContext) extends Db with MerchantRiskScoreDetailTrait {
+class MerchantRiskScoreDetailRepo(db: Database)
+                                           (implicit ec: ExecutionContext) extends MerchantRiskScoreDetailTrait {
   val logger: Logger = LoggerFactory.getLogger(getClass)
 
   private val merchantRiskScoreDetailTable = TableQuery[MerchantRiskScoreDetailTable]
 
+  //val db = Database.forConfig("postgreDBProfile")
   def insertRiskScore(riskScoreReq: MerchantRiskScoreReq): Future[Either[String, Done]] = {
     val approvalFlag = if(riskScoreReq.updatedRisk == "High") "Pending" else "Approved"
     val insertMessage = merchantRiskScoreDetailTable +=  MerchantRiskScore(0, riskScoreReq.merchantId, riskScoreReq.oldRisk, riskScoreReq.updatedRisk, approvalFlag, LocalDateTime.now())
@@ -63,7 +64,7 @@ trait MerchantRiskScoreDetailTrait {
 
     def approvalFlag = column[String]("APPROVAL_FLAG")
 
-    def updateTimestamp = column[LocalDateTime]("UPDATE_TIMESTAMP")
+    def updateTimestamp = column[LocalDateTime]("UPDATED_TIMESTAMP")
 
     def listType = column[String]("MERCHANT_RISK_TYPE")
   }

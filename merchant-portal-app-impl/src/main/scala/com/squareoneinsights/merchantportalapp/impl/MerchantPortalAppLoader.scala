@@ -53,7 +53,7 @@ abstract class MerchantportalappApplication(context: LagomApplicationContext)
   lazy val kafkaConsumeService = wire[KafkaConsumeService]
   lazy val kafkaProduceService = wire[KafkaProduceService]
 
-  val dbProfile = merchantConfig.getString("merchant.db.profile")
-  lazy val dbConfig = DatabaseConfig.forConfig[JdbcProfile](dbProfile)
+  //lazy val dbProfile = merchantConfig.getString("postgreDBProfile")
+  //lazy val dbConfig = DatabaseConfig.forConfig[JdbcProfile]("postgreDBProfile")
 
 }

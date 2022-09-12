@@ -1,16 +1,14 @@
 package com.squareoneinsights.merchantportalapp.impl.repository
 
-import com.squareoneinsights.merchantportalapp.impl.comman.Db
 import com.squareoneinsights.merchantportalapp.impl.model.{BusinessImpactWithType, PaymentTypeDetail}
 import org.slf4j.{Logger, LoggerFactory}
-import slick.basic.DatabaseConfig
-import slick.jdbc.{JdbcProfile, PostgresProfile}
 import slick.jdbc.PostgresProfile.api._
 import cats.implicits._
 import scala.concurrent.{ExecutionContext, Future}
 
-class BusinessImpactRepo(val config: DatabaseConfig[JdbcProfile])(implicit ec: ExecutionContext) extends BusinessImpactTrait {
+class BusinessImpactRepo(db: Database)(implicit ec: ExecutionContext) extends BusinessImpactTrait {
 
+  //val db = Database.forConfig("db.default")
   val logger: Logger = LoggerFactory.getLogger(getClass)
   val businessImpactTable  = TableQuery[BusinessImpactTable]
 
@@ -22,7 +20,7 @@ class BusinessImpactRepo(val config: DatabaseConfig[JdbcProfile])(implicit ec: E
   }
 }
 
-trait BusinessImpactTrait extends Db {
+trait BusinessImpactTrait {
 
   class BusinessImpactTable(tag: Tag) extends Table[BusinessImpactWithType](tag, "BUSINESS_IMPACT") {
 

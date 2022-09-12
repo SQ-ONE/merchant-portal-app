@@ -4,6 +4,7 @@ import com.squareoneinsights.merchantportalapp.api
 import com.squareoneinsights.merchantportalapp.api.MerchantportalappService
 import akka.Done
 import akka.NotUsed
+import akka.actor.ActorSystem
 import cats.data.EitherT
 import com.lightbend.lagom.scaladsl.api.transport.BadRequest
 import com.lightbend.lagom.scaladsl.api.{Descriptor, ServiceCall}
@@ -11,7 +12,7 @@ import com.lightbend.lagom.scaladsl.persistence.PersistentEntityRegistry
 import com.lightbend.lagom.scaladsl.server.ServerServiceCall
 import com.squareoneinsights.merchantportalapp.api.request.MerchantRiskScoreReq
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import com.squareoneinsights.merchantportalapp.api.response.MerchantRiskScoreResp
 import com.squareoneinsights.merchantportalapp.impl.kafkaService.{KafkaConsumeService, KafkaProduceService}
 import com.squareoneinsights.merchantportalapp.impl.repository.MerchantRiskScoreDetailRepo
@@ -23,9 +24,15 @@ import play.api.libs.json.Json
 class MerchantPortalAppServiceImpl(persistentEntityRegistry: PersistentEntityRegistry,
                                    merchantRiskScoreDetailRepo: MerchantRiskScoreDetailRepo,
                                    kafkaProduceService: KafkaProduceService,
-                                   kafkaConsumeService: KafkaConsumeService)
+                                   kafkaConsumeService: KafkaConsumeService,
+                                   actorSystem: ActorSystem)
                                   (implicit ec: ExecutionContext)
   extends MerchantportalappService {
+
+  override def healthCheck : ServiceCall[NotUsed, String] =
+    ServerServiceCall { _ =>
+      Future.successful("Fine..")
+    }
 
   override def getRiskScore(merchantId: String): ServiceCall[NotUsed, MerchantRiskScoreResp] =
    ServerServiceCall { _ =>
@@ -50,4 +57,11 @@ class MerchantPortalAppServiceImpl(persistentEntityRegistry: PersistentEntityReg
         }
       }
     }
+
+/*  override def doWork = ServiceCall { _ =>
+    Future {
+      println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ")
+      Done
+    }
+  }*/
 }

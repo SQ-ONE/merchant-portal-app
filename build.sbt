@@ -1,9 +1,12 @@
 ThisBuild / organization := "com.squareoneinsights"
 ThisBuild / version := "1.0"
 
+// lagomServiceGatewayPort in ThisBuild := 9091
+
 // the Scala version that will be used for cross-compiled libraries
 ThisBuild / scalaVersion := "2.12.4"
 
+lagomCassandraEnabled in ThisBuild := false
 // Workaround for scala-java8-compat issue affecting Lagom dev-mode
 // https://github.com/lagom/lagom/issues/3344
 
@@ -76,7 +79,8 @@ lazy val `merchant-portal-app-impl` = (project in file("merchant-portal-app-impl
       circeCore,
       circeGeneric,
       circeParser,
-      kafkaClient
+      kafkaClient,
+      guice
     )
   )
   .settings(lagomForkedTestSettings)
