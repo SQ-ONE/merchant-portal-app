@@ -1,1 +1,1 @@
-# merchant-portal-lagom-app
+# merchant-portal-app
